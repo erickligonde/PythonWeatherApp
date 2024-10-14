@@ -1,0 +1,39 @@
+import requests
+import math
+
+print('Welcome to the Weather App')
+while True:
+    city = input("Please choose a city\n")
+    base = f'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=EVX4MJY7DA5J6R3X7QX658H8E&contentType=json'
+
+    def get_info():
+        response = requests.get(base)
+        if response.status_code == 200:
+            data = response.json()
+            return data
+        else:
+            print('Data not found')
+
+
+    def print_info(city):
+        city_info = get_info()
+        cel = city_info['currentConditions']['temp']
+        temp = math.floor((cel * 9/5) + 32)
+        conditions = city_info['currentConditions']['conditions']
+        humidity = city_info['currentConditions']['humidity']
+        cityName = city[0].upper() + city[1:]
+        
+        print(f'City: {cityName}')
+        print(f'Temperature: {temp}')
+        print(f'Conditions: {conditions}')
+        print(f'Humidity: {humidity}%')
+        
+        
+    print_info(city)    
+    choice = input("Would you like to search for another city? (y/n)\n")
+    if choice == 'y':
+        print("")
+        pass
+    elif choice == 'n':
+        print("Goodbye!")
+        break
